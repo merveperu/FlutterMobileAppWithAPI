@@ -1,11 +1,13 @@
 import 'dart:convert';
 
+import 'package:flutter_social_button/flutter_social_button.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'sidemenu.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl_phone_field/intl_phone_field.dart';
+import 'AddButton.dart';
 
 class Second extends StatefulWidget {
   const Second({Key? key}) : super(key: key);
@@ -32,16 +34,13 @@ class MyTextStyle2 {
   );
 }
 
-class _SecondState extends State<Second> {
-  //dropdown button value
-  int value = 1;
-  TextEditingController nameController = new TextEditingController();
-  TextEditingController surnameController = new TextEditingController();
-  TextEditingController mailController = new TextEditingController();
-  TextEditingController phoneController = new TextEditingController();
+//Global Text Style3
+class MyTextStyle3 {
+  static const TextStyle textStyle =
+      TextStyle(color: Color.fromARGB(255, 35, 134, 166), fontSize: 15);
+}
 
-  List users = [];
-  bool isLoading = false;
+class _SecondState extends State<Second> {
   @override
   void initState() {
     // TODO: implement initState
@@ -51,13 +50,13 @@ class _SecondState extends State<Second> {
 
   //display form users with api
   Future fetchUser() async {
-    var response = await http.get(
-        Uri.parse("https://backend.gohealthination.com/additions/freequote/"));
+    var response = await http.get(Uri.parse(
+        "https://backend.gohealthination.com/additions/freequote/?page_size=50"));
     if (response.statusCode == 200) {
       print("Connection for displaying form users succesful.");
       var items = json.decode(utf8.decode(response.bodyBytes))["results"];
       //10 kişiden sonra kimse yok görünüyor!
-      print(items);
+      //print(items);
       setState(() {
         users = items;
       });
@@ -79,17 +78,22 @@ class _SecondState extends State<Second> {
     if (response.statusCode == 200 || response.statusCode == 204) {
       print("Connection for delete form users succesful!");
       //var items = json.decode(utf8.decode(response.bodyBytes))["id"];
-      print(response.body);
+      //print(response.body);
     } else {
       print('Connection for delete form users not succesful! Response code:');
       print(response.statusCode);
     }
   }
 
+  String warningMessage = "";
+
   //post form users with api
   Future postQuoteForm() async {
     // This will be sent as form data in the post requst
-    if (nameController.text.isNotEmpty && surnameController.text.isNotEmpty) {
+    if (nameController.text.isNotEmpty &&
+        surnameController.text.isNotEmpty &&
+        mailController.text.isNotEmpty &&
+        phoneController.text.isNotEmpty) {
       final response = await http.post(
         Uri.parse('https://backend.gohealthination.com/additions/freequote/'),
         body: ({
@@ -97,21 +101,35 @@ class _SecondState extends State<Second> {
           "last_name": surnameController.text,
           "email": mailController.text,
           "phoneNumber": phoneController.text,
-          "treatment": value.toString(),
+          "treatment": selectedValue.toString(),
+          "subTreatment": key.toString(),
+          "isOnlineMeeting": key2.toString(),
         }),
       );
 
-      if (response.statusCode == 200 || response.statusCode == 204 || response.statusCode==201) {
-        
+      if (response.statusCode == 200 ||
+          response.statusCode == 204 ||
+          response.statusCode == 201) {
         print("Connection for post form users succesful!");
         //var items = json.decode(utf8.decode(response.bodyBytes))["id"];
-        print("Form Variables: "+nameController.text+" "+surnameController.text+" "+mailController.text+" "+phoneController.text+" "+value.toString());
+        print("Form Variables: " +
+            nameController.text +
+            " " +
+            surnameController.text +
+            " " +
+            mailController.text +
+            " " +
+            phoneController.text +
+            " " +
+            selectedValue.toString());
       } else {
         print('Connection for post form users not succesful! Response code:');
         print(response.statusCode);
       }
-    }else{
-      print("ne oluyor?");
+    } else {
+      //if fields are empty
+      print("Text Fields are empty!");
+      warningMessage = "Please fill all the fieldss!";
     }
   }
 
@@ -126,7 +144,7 @@ class _SecondState extends State<Second> {
         primarySwatch: Colors.blue,
         appBarTheme: AppBarTheme(
           iconTheme: IconThemeData(color: Colors.black),
-          color: Color.fromARGB(137, 26, 51, 150), //<-- SEE HERE
+          color: Color.fromARGB(137, 26, 51, 150),  
         ),
       ),
       home: Scaffold(
@@ -148,8 +166,8 @@ class _SecondState extends State<Second> {
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
               colors: [
-                Color.fromARGB(105, 51, 28, 142),
-                Color.fromARGB(139, 35, 171, 96)
+                Color.fromARGB(158, 133, 115, 204),
+                Color.fromARGB(137, 101, 198, 144)
               ],
             )),
             child: Stack(
@@ -178,471 +196,14 @@ class _SecondState extends State<Second> {
                           ),
                         ],
                       ),
-                      //Create Button for Quote Form
                       SizedBox(
                         width: 100,
                         child: Column(
                           children: [
                             Row(
                               children: [
-                                MaterialButton(
-                                  minWidth: 90,
-                                  color: Color.fromARGB(255, 26, 72, 150),
-                                  shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(5)),
-                                  child: Text(
-                                    "Add",
-                                    style: TextStyle(color: Colors.white),
-                                    textAlign: TextAlign.center,
-                                  ),
-                                  onPressed: () {
-                                    showDialog(
-                                        context: context,
-                                        builder: (BuildContext context) {
-                                          return AlertDialog(
-                                            scrollable: true,
-                                            content: Row(
-                                              children: [
-                                                Row(children: [
-                                                  Padding(
-                                                    padding:
-                                                        const EdgeInsets.only(
-                                                            left: 2.0),
-                                                    child: SizedBox(
-                                                      width: 230,
-                                                      child: Column(
-                                                        //center horizontally
-                                                        mainAxisAlignment:
-                                                            MainAxisAlignment
-                                                                .center,
-                                                        //fixes to the left
-                                                        crossAxisAlignment:
-                                                            CrossAxisAlignment
-                                                                .start,
-                                                        children: [
-                                                          TextField(
-                                                              controller:
-                                                                  nameController,
-                                                              style: const TextStyle(
-                                                                  color: Color
-                                                                      .fromARGB(
-                                                                          255,
-                                                                          26,
-                                                                          72,
-                                                                          150),
-                                                                  fontSize: 15),
-                                                              decoration:
-                                                                  InputDecoration(
-                                                                //filled: true,
-                                                                //fillColor: Color.fromARGB(91, 252, 252, 252),
-                                                                prefixIcon:
-                                                                    const Icon(
-                                                                        Icons
-                                                                            .person,
-                                                                        size:
-                                                                            20.0),
-                                                                enabledBorder:
-                                                                    OutlineInputBorder(
-                                                                  borderSide:
-                                                                      const BorderSide(
-                                                                    color: Color
-                                                                        .fromARGB(
-                                                                            255,
-                                                                            35,
-                                                                            134,
-                                                                            166),
-                                                                  ),
-                                                                  borderRadius:
-                                                                      BorderRadius
-                                                                          .circular(
-                                                                              10),
-                                                                ),
-                                                                focusedBorder:
-                                                                    OutlineInputBorder(
-                                                                  borderSide:
-                                                                      const BorderSide(
-                                                                    color: Color
-                                                                        .fromARGB(
-                                                                            255,
-                                                                            26,
-                                                                            72,
-                                                                            150),
-                                                                    width: 1.3,
-                                                                  ),
-                                                                  borderRadius:
-                                                                      BorderRadius
-                                                                          .circular(
-                                                                              10),
-                                                                ),
-
-                                                                labelText:
-                                                                    'NAME',
-                                                                labelStyle: const TextStyle(
-                                                                    color: Color
-                                                                        .fromARGB(
-                                                                            255,
-                                                                            35,
-                                                                            134,
-                                                                            166),
-                                                                    fontSize:
-                                                                        15),
-                                                              )),
-                                                          SizedBox(
-                                                            height: 10,
-                                                          ),
-                                                          TextField(
-                                                              controller:
-                                                                  surnameController,
-                                                              style: const TextStyle(
-                                                                  color: Color
-                                                                      .fromARGB(
-                                                                          255,
-                                                                          26,
-                                                                          72,
-                                                                          150),
-                                                                  fontSize: 15),
-                                                              decoration:
-                                                                  InputDecoration(
-                                                                //filled: true,
-                                                                //fillColor: Color.fromARGB(91, 252, 252, 252),
-                                                                prefixIcon:
-                                                                    const Icon(
-                                                                        Icons
-                                                                            .person,
-                                                                        size:
-                                                                            20.0),
-                                                                enabledBorder:
-                                                                    OutlineInputBorder(
-                                                                  borderSide:
-                                                                      const BorderSide(
-                                                                    color: Color
-                                                                        .fromARGB(
-                                                                            255,
-                                                                            35,
-                                                                            134,
-                                                                            166),
-                                                                  ),
-                                                                  borderRadius:
-                                                                      BorderRadius
-                                                                          .circular(
-                                                                              10),
-                                                                ),
-                                                                focusedBorder:
-                                                                    OutlineInputBorder(
-                                                                  borderSide:
-                                                                      const BorderSide(
-                                                                    color: Color
-                                                                        .fromARGB(
-                                                                            255,
-                                                                            26,
-                                                                            72,
-                                                                            150),
-                                                                    width: 1.3,
-                                                                  ),
-                                                                  borderRadius:
-                                                                      BorderRadius
-                                                                          .circular(
-                                                                              10),
-                                                                ),
-
-                                                                labelText:
-                                                                    'SURNAME',
-                                                                labelStyle: const TextStyle(
-                                                                    color: Color
-                                                                        .fromARGB(
-                                                                            255,
-                                                                            35,
-                                                                            134,
-                                                                            166),
-                                                                    fontSize:
-                                                                        15),
-                                                              )),
-                                                          SizedBox(
-                                                            height: 10,
-                                                          ),
-                                                          TextField(
-                                                              controller:
-                                                                  mailController,
-                                                              style: const TextStyle(
-                                                                  color: Color
-                                                                      .fromARGB(
-                                                                          255,
-                                                                          26,
-                                                                          72,
-                                                                          150),
-                                                                  fontSize: 15),
-                                                              decoration:
-                                                                  InputDecoration(
-                                                                //filled: true,
-                                                                //fillColor: Color.fromARGB(91, 252, 252, 252),
-                                                                prefixIcon:
-                                                                    const Icon(
-                                                                        Icons
-                                                                            .mail,
-                                                                        size:
-                                                                            20.0),
-                                                                enabledBorder:
-                                                                    OutlineInputBorder(
-                                                                  borderSide:
-                                                                      const BorderSide(
-                                                                    color: Color
-                                                                        .fromARGB(
-                                                                            255,
-                                                                            35,
-                                                                            134,
-                                                                            166),
-                                                                  ),
-                                                                  borderRadius:
-                                                                      BorderRadius
-                                                                          .circular(
-                                                                              10),
-                                                                ),
-                                                                focusedBorder:
-                                                                    OutlineInputBorder(
-                                                                  borderSide:
-                                                                      const BorderSide(
-                                                                    color: Color
-                                                                        .fromARGB(
-                                                                            255,
-                                                                            26,
-                                                                            72,
-                                                                            150),
-                                                                    width: 1.3,
-                                                                  ),
-                                                                  borderRadius:
-                                                                      BorderRadius
-                                                                          .circular(
-                                                                              10),
-                                                                ),
-
-                                                                labelText:
-                                                                    'E-MAIL',
-                                                                labelStyle: const TextStyle(
-                                                                    color: Color
-                                                                        .fromARGB(
-                                                                            255,
-                                                                            35,
-                                                                            134,
-                                                                            166),
-                                                                    fontSize:
-                                                                        15),
-                                                              )),
-                                                          SizedBox(
-                                                            height: 10,
-                                                          ),
-
-                                                          //I had to do this because onChanged was not working. (Took 3 hours to find!)
-                                                          StatefulBuilder(
-                                                              builder: (context,
-                                                                  setState) {
-                                                            return Center(
-                                                              child: SizedBox(
-                                                                width: 700,
-                                                                height: 55,
-                                                                child:
-                                                                    DecoratedBox(
-                                                                  decoration:
-                                                                      BoxDecoration(
-                                                                    border: Border.all(
-                                                                        color: Color.fromARGB(
-                                                                            255,
-                                                                            35,
-                                                                            134,
-                                                                            166),
-                                                                        width:
-                                                                            1.2),
-                                                                    borderRadius:
-                                                                        BorderRadius.circular(
-                                                                            10),
-                                                                  ),
-                                                                  child:
-                                                                      Padding(
-                                                                    padding:
-                                                                        const EdgeInsets.all(
-                                                                            5.0),
-                                                                    child:
-                                                                        DropdownButtonFormField(
-                                                                      decoration:
-                                                                          InputDecoration(
-                                                                        enabledBorder:
-                                                                            InputBorder.none,
-                                                                        focusedBorder:
-                                                                            InputBorder.none,
-                                                                        prefixIcon:
-                                                                            Icon(Icons.local_hospital),
-                                                                      ),
-                                                                      value:
-                                                                          value,
-                                                                      items: [
-                                                                        DropdownMenuItem(
-                                                                          child:
-                                                                              Text("Eye Care"),
-                                                                          value:
-                                                                              1,
-                                                                        ),
-                                                                        DropdownMenuItem(
-                                                                          child:
-                                                                              Text("Dentistry"),
-                                                                          value:
-                                                                              2,
-                                                                        ),
-                                                                        DropdownMenuItem(
-                                                                          child:
-                                                                              Text("Weight Loss"),
-                                                                          value:
-                                                                              3,
-                                                                        ),
-                                                                        DropdownMenuItem(
-                                                                          child:
-                                                                              Text("Hairtransplant"),
-                                                                          value:
-                                                                              4,
-                                                                        ),
-                                                                      ],
-                                                                      onChanged:
-                                                                          (newvalue) {
-                                                                        value = newvalue
-                                                                            as int;
-                                                                        setState(
-                                                                            () {
-                                                                          value =
-                                                                              newvalue as int;
-                                                                          print("Selected: " +
-                                                                              newvalue.toString());
-                                                                        });
-                                                                      },
-                                                                      style: TextStyle(
-                                                                          color: Color.fromARGB(
-                                                                              255,
-                                                                              35,
-                                                                              134,
-                                                                              166),
-                                                                          fontSize:
-                                                                              15),
-                                                                    ),
-                                                                  ),
-                                                                ),
-                                                              ),
-                                                            );
-                                                          }),
-                                                          SizedBox(
-                                                            height: 10,
-                                                          ),
-                                                          IntlPhoneField(
-                                                            controller:
-                                                                phoneController,
-                                                            style: TextStyle(
-                                                                color: Color
-                                                                    .fromARGB(
-                                                                        255,
-                                                                        26,
-                                                                        72,
-                                                                        150),
-                                                                fontSize: 15),
-                                                            decoration:
-                                                                InputDecoration(
-                                                              labelText:
-                                                                  'Phone Number',
-                                                              labelStyle: const TextStyle(
-                                                                  color: Color
-                                                                      .fromARGB(
-                                                                          255,
-                                                                          35,
-                                                                          134,
-                                                                          166),
-                                                                  fontSize: 15),
-                                                              enabledBorder:
-                                                                  OutlineInputBorder(
-                                                                borderRadius:
-                                                                    BorderRadius
-                                                                        .circular(
-                                                                            10),
-                                                                borderSide:
-                                                                    BorderSide(
-                                                                  color: Color
-                                                                      .fromARGB(
-                                                                          255,
-                                                                          35,
-                                                                          134,
-                                                                          166),
-                                                                ),
-                                                              ),
-                                                              focusedBorder:
-                                                                  OutlineInputBorder(
-                                                                borderSide:
-                                                                    const BorderSide(
-                                                                  color: Color
-                                                                      .fromARGB(
-                                                                          255,
-                                                                          26,
-                                                                          72,
-                                                                          150),
-                                                                  width: 1.3,
-                                                                ),
-                                                                borderRadius:
-                                                                    BorderRadius
-                                                                        .circular(
-                                                                            10),
-                                                              ),
-                                                            ),
-                                                            initialCountryCode:
-                                                                'TR',
-                                                            onChanged: (phone) {
-                                                              setState(() {
-                                                                phone=phone; 
-                                                                //print(phone.completeNumber);
-                                                              });
-                                                              
-                                                            },
-                                                          ),
-                                                          Center(
-                                                            child:
-                                                                MaterialButton(
-                                                                    minWidth:
-                                                                        270,
-                                                                    color: Color
-                                                                        .fromARGB(
-                                                                            255,
-                                                                            26,
-                                                                            72,
-                                                                            150),
-                                                                    shape: RoundedRectangleBorder(
-                                                                        borderRadius:
-                                                                            BorderRadius.circular(
-                                                                                5)),
-                                                                    child: Text(
-                                                                      "Add",
-                                                                      style: TextStyle(
-                                                                          color:
-                                                                              Colors.white),
-                                                                      textAlign:
-                                                                          TextAlign
-                                                                              .center,
-                                                                    ),
-                                                                    onPressed:
-                                                                        () {
-                                                                      setState(
-                                                                          () {
-                                                                        postQuoteForm();
-                                                                        Navigator.push(
-                                                                            context,
-                                                                            MaterialPageRoute(
-                                                                              builder: (context) => const Second(),
-                                                                            ));
-                                                                      });
-                                                                    }),
-                                                          ),
-                                                        ],
-                                                      ),
-                                                    ),
-                                                  ),
-                                                ]),
-                                              ],
-                                            ),
-                                          );
-                                        });
-                                  },
-                                )
+                                //"Add" Button for Quote Form
+                                AddButton(),
                               ],
                             )
                           ],
@@ -683,7 +244,7 @@ class _SecondState extends State<Second> {
                       //onlie meeting variables
                       String? meeting =
                           users[index]["isOnlineMeeting"].toString();
-                      if (meeting == "null") {
+                      if (meeting == "null" || meeting == "") {
                         meeting = "-";
                       }
 
@@ -702,7 +263,7 @@ class _SecondState extends State<Second> {
                                   decoration: BoxDecoration(
                                     gradient: LinearGradient(
                                       colors: [
-                                        Color.fromARGB(255, 159, 154, 154),
+                                        Color.fromARGB(255, 203, 197, 197),
                                         Color.fromARGB(134, 255, 255, 255)
                                       ],
                                       begin: Alignment.bottomLeft,

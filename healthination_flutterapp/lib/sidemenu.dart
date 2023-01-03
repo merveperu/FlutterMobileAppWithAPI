@@ -1,9 +1,40 @@
 import 'package:flutter/material.dart';
+import 'package:healthination_flutterapp/Chat.dart';
+import 'package:healthination_flutterapp/HomePage.dart';
 import 'package:healthination_flutterapp/QuoteForm.dart';
 import 'PatientProcess.dart';
 import 'JobApplications.dart';
+import 'main.dart';
+import 'package:http/http.dart' as http;
 
-class NavDrawer extends StatelessWidget {
+//menu header text style
+class MyTextStyle {
+  static const TextStyle textStyle = TextStyle(
+    fontSize: 15,
+    fontWeight: FontWeight.w300,
+    color: Color.fromARGB(255, 10, 55, 117),
+  );
+}
+
+//Menu profile texts
+class MyTextStyle2 {
+  static const TextStyle textStyle = TextStyle(
+    fontSize: 13,
+    fontWeight: FontWeight.w300,
+    color: Color.fromARGB(255, 10, 55, 117),
+  );
+}
+
+
+
+
+class NavDrawer extends StatefulWidget {
+  @override
+  State<NavDrawer> createState() => _NavDrawerState();
+}
+
+class _NavDrawerState extends State<NavDrawer> {
+  
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -13,11 +44,21 @@ class NavDrawer extends StatelessWidget {
           padding: EdgeInsets.zero,
           children: <Widget>[
             Container(
-              height: 100,
+              height: 170,
               child: DrawerHeader(
-                child: Text(
-                  'Pages',
-                  style: TextStyle(color: Colors.white, fontSize: 25),
+                child: Column(
+                  children: [
+                    ClipRRect(
+                      child: Image.network(
+                        "$myPhoto",
+                        width: 70,
+                        height: 70,
+                        fit: BoxFit.cover,
+                      ),
+                    ),
+                    SizedBox(height: 10,),
+                    Text(myUserName,style: MyTextStyle2.textStyle,),
+                  ],
                 ),
                 decoration: BoxDecoration(
                   color: Color.fromARGB(137, 26, 51, 150),
@@ -25,19 +66,53 @@ class NavDrawer extends StatelessWidget {
               ),
             ),
             ListTile(
-              leading: Icon(Icons.description,color: Color.fromARGB(255, 10, 55, 117),),
-              title: Text('Quote Forms'),
-              onTap: () => Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context)=>const Second())),
+              leading: Icon(
+                Icons.home,
+                color: Color.fromARGB(255, 10, 55, 117),
+              ),
+              title: Text(
+                'Home',
+                style: MyTextStyle.textStyle,
+              ),
+              onTap: () => Navigator.of(context).pushReplacement(
+                  MaterialPageRoute(builder: (context) => const HomePage())),
             ),
             ListTile(
-              leading: Icon(Icons.developer_board,color: Color.fromARGB(255, 10, 55, 117),),
-              title: Text('Patient Process'),
-              onTap: () => Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context)=>const Third())),
+              leading: Icon(
+                Icons.description,
+                color: Color.fromARGB(255, 10, 55, 117),
+              ),
+              title: Text('Quote Forms', style: MyTextStyle.textStyle),
+              onTap: () => Navigator.of(context).pushReplacement(
+                  MaterialPageRoute(builder: (context) => const Second())),
             ),
             ListTile(
-              leading: Icon(Icons.work_outline,color: Color.fromARGB(255, 10, 55, 117),),
-              title: Text('Job Applications'),
-              onTap: () => Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context)=>const JopApplications())),
+              leading: Icon(
+                Icons.work,
+                color: Color.fromARGB(255, 10, 55, 117),
+              ),
+              title: Text('Job Applications', style: MyTextStyle.textStyle),
+              onTap: () => Navigator.of(context).pushReplacement(
+                  MaterialPageRoute(
+                      builder: (context) => const JopApplications())),
+            ),
+            ListTile(
+              leading: Icon(
+                Icons.chat,
+                color: Color.fromARGB(255, 10, 55, 117),
+              ),
+              title: Text('Chat', style: MyTextStyle.textStyle),
+              onTap: () => Navigator.of(context).pushReplacement(
+                  MaterialPageRoute(builder: (context) => const ChatPage())),
+            ),
+            ListTile(
+              leading: Icon(
+                Icons.developer_board,
+                color: Color.fromARGB(255, 10, 55, 117),
+              ),
+              title: Text('Patient Process', style: MyTextStyle.textStyle),
+              onTap: () => Navigator.of(context).pushReplacement(
+                  MaterialPageRoute(builder: (context) => const Third())),
             ),
           ],
         ),
@@ -45,7 +120,3 @@ class NavDrawer extends StatelessWidget {
     );
   }
 }
-
-
-
- 

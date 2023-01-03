@@ -16,7 +16,7 @@ class JopApplications extends StatefulWidget {
 //Global Text Style
 class MyTextStyle {
   static const TextStyle textStyle = TextStyle(
-    fontSize: 12,
+    fontSize: 14,
     fontWeight: FontWeight.w300,
     color: Color.fromARGB(255, 10, 55, 117),
   );
@@ -31,7 +31,7 @@ class MyTextStyle2 {
   );
 }
 
-//Global Text Style3
+//Global Text Style3 for showdialog texts
 class MyTextStyle3 {
   static const TextStyle textStyle = TextStyle(
     fontSize: 15,
@@ -40,7 +40,19 @@ class MyTextStyle3 {
   );
 }
 
+//Global Text Style3 for showdialog headers
+class MyTextStyle4 {
+  static const TextStyle textStyle = TextStyle(
+    fontSize: 15,
+    fontWeight: FontWeight.w200,
+    color: Color.fromARGB(255, 15, 39, 124),
+    decoration: TextDecoration.underline,
+  );
+}
+
 class _JopApplicationsState extends State<JopApplications> {
+  String jobs = "";
+
   List users = [];
   bool isLoading = false;
   @override
@@ -68,7 +80,7 @@ class _JopApplicationsState extends State<JopApplications> {
     }
   }
 
-  //display form users with api
+  //display job applications with api
   Future fetchJob() async {
     var response = await http.get(Uri.parse(
         "https://backend.gohealthination.com/additions/job_application/"));
@@ -150,29 +162,6 @@ class _JopApplicationsState extends State<JopApplications> {
                         ),
                       ],
                     ),
-                    //Create Button for Quote Form
-                    // SizedBox(
-                    //   width: 100,
-                    //   child: Column(
-                    //     children: [
-                    //       Row(
-                    //         children: [
-                    //           MaterialButton(
-                    //             color: Color.fromARGB(255, 26, 72, 150),
-                    //             onPressed: () {},
-                    //             shape: RoundedRectangleBorder(
-                    //                 borderRadius: BorderRadius.circular(5)),
-                    //             child: Text(
-                    //               "Add",
-                    //               style: TextStyle(color: Colors.white),
-                    //               textAlign: TextAlign.center,
-                    //             ),
-                    //           )
-                    //         ],
-                    //       )
-                    //     ],
-                    //   ),
-                    // )
                   ],
                 ),
               ),
@@ -184,6 +173,24 @@ class _JopApplicationsState extends State<JopApplications> {
                     //date variables
                     String time = users[index]["created_at"];
                     DateTime dateTime = DateTime.parse(time);
+
+                    //user role variables
+                    String job = users[index]["job"];
+                    if (job == "HO") {
+                      job = "Hospitality Organizer";
+                    } else if (job == "Ac") {
+                      job = "Accountant";
+                    } else if (job == "CC") {
+                      job = "Call Center";
+                    } else if (job == "TO") {
+                      job = "Travel Organizer";
+                    } else if (job == "HO") {
+                      job = "Hospitality Organizer";
+                    } else if (job == "Tr") {
+                      job = "Translator";
+                    } else {
+                      job = "Site Manager";
+                    }
 
                     return Padding(
                       padding:
@@ -287,17 +294,12 @@ class _JopApplicationsState extends State<JopApplications> {
                                                                                 //fixes to the left
                                                                                 crossAxisAlignment: CrossAxisAlignment.start,
                                                                                 children: [
+                                                                                  Text(
+                                                                                    "Applicant: ",
+                                                                                    style: MyTextStyle4.textStyle,
+                                                                                  ),
                                                                                   Row(
                                                                                     children: [
-                                                                                      Text(
-                                                                                        "from: ",
-                                                                                        style: MyTextStyle3.textStyle,
-                                                                                      ),
-                                                                                      Text(
-                                                                                        users[index]["job"],
-                                                                                        style: MyTextStyle3.textStyle,
-                                                                                      ),
-                                                                                      Text(" "),
                                                                                       Text(
                                                                                         users[index]["name"],
                                                                                         style: MyTextStyle3.textStyle,
@@ -315,13 +317,75 @@ class _JopApplicationsState extends State<JopApplications> {
                                                                                       ),
                                                                                     ],
                                                                                   ),
+                                                                                  SizedBox(
+                                                                                    height: 10,
+                                                                                  ),
                                                                                   Text(
-                                                                                    users[index]["introduce"],
-                                                                                    style: MyTextStyle.textStyle,
+                                                                                    "Applied Role: ",
+                                                                                    style: MyTextStyle4.textStyle,
                                                                                     softWrap: false,
                                                                                     maxLines: 20,
                                                                                     overflow: TextOverflow.ellipsis,
                                                                                   ),
+                                                                                  Text(
+                                                                                    job,
+                                                                                    style: MyTextStyle3.textStyle,
+                                                                                    softWrap: false,
+                                                                                    maxLines: 20,
+                                                                                    overflow: TextOverflow.ellipsis,
+                                                                                  ),
+                                                                                  SizedBox(
+                                                                                    height: 10,
+                                                                                  ),
+                                                                                  Column(
+                                                                                    //center horizontally
+                                                                                    mainAxisAlignment: MainAxisAlignment.center,
+                                                                                    //fixes to the left
+                                                                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                                                                    children: [
+                                                                                      Text(
+                                                                                        "Introduction Text:",
+                                                                                        style: MyTextStyle4.textStyle,
+                                                                                      ),
+                                                                                      Text(
+                                                                                        users[index]["introduce"],
+                                                                                        style: MyTextStyle3.textStyle,
+                                                                                        softWrap: false,
+                                                                                        maxLines: 20,
+                                                                                        overflow: TextOverflow.ellipsis,
+                                                                                      ),
+                                                                                      SizedBox(
+                                                                                        height: 40,
+                                                                                      ),
+                                                                                      MaterialButton(
+                                                                                          minWidth: 120,
+                                                                                          color: Color.fromARGB(255, 26, 72, 150),
+                                                                                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
+                                                                                          child: Padding(
+                                                                                            padding: const EdgeInsets.all(8.0),
+                                                                                            child: Text(
+                                                                                              "Accept as a\n" + job,
+                                                                                              style: TextStyle(color: Colors.white),
+                                                                                              textAlign: TextAlign.center,
+                                                                                            ),
+                                                                                          ),
+                                                                                          onPressed: () {
+                                                                                            setState(() {});
+                                                                                          }),
+                                                                                    ],
+                                                                                  ),
+                                                                                  MaterialButton(
+                                                                                      minWidth: 100,
+                                                                                      color: Color.fromARGB(255, 195, 35, 35),
+                                                                                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
+                                                                                      child: Text(
+                                                                                        "Reject and delete",
+                                                                                        style: TextStyle(color: Colors.white),
+                                                                                        textAlign: TextAlign.center,
+                                                                                      ),
+                                                                                      onPressed: () {
+                                                                                        deleteJob(users[index]["id"]);
+                                                                                      }),
                                                                                 ],
                                                                               ),
                                                                             ),

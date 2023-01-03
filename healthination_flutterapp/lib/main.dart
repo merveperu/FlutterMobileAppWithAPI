@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:healthination_flutterapp/AddButton.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 import 'QuoteForm.dart';
@@ -9,6 +10,13 @@ import 'HomePage.dart';
 void main() {
   runApp(const MyApp());
 }
+
+//id of the current user
+String myPhoto="";
+String myUserName="";
+int myId=0;
+String myFirstName="";
+String myLastName="";
 
 class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
@@ -75,12 +83,24 @@ class _MyCustomFormState extends State<MyCustomForm> {
 
       if (response.statusCode == 200) {
         Map<String, dynamic> output = json.decode(response.body);
-        final body = jsonDecode(response.body);
-        //key dediğimiz şey token burada!
+        final body = jsonDecode(utf8.decode(response.bodyBytes));
+         
+        print(response.body);
         print("Token: " + body["key"].toString());
         print("Connection for login succesful");
+        print(body["user"]["username"]);
+        print(body["user"]["id"]);
+        print(body["user"]["first_name"]);
+         print(body["user"]["last_name"]);
+        
+        
 
         setState(() {
+          myUserName=body["user"]["username"];
+          myPhoto=body["user"]["userPhoto"].toString();
+          myId=body["user"]["id"];
+          myFirstName=body["user"]["first_name"];
+          myLastName=body["user"]["last_name"];
           Navigator.push(
               context,
               MaterialPageRoute(
@@ -98,16 +118,6 @@ class _MyCustomFormState extends State<MyCustomForm> {
         print("invalid crediantials");
         print(response.statusCode);
       }
-    } else {
-      //when textfields are empty
-      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-          //behavior: SnackBarBehavior.floating,
-          //margin: EdgeInsets.only(bottom: 10.0),
-          backgroundColor: Colors.red,
-          content: Text(
-            "Please fill all the area!",
-            textAlign: TextAlign.center,
-          )));
     }
   }
 
@@ -239,7 +249,20 @@ class _MyCustomFormState extends State<MyCustomForm> {
               width: 280,
               child: MaterialButton(
                 onPressed: () {
-                  signIn();
+                  if (emailController.text.isNotEmpty &&
+                      passwordController.text.isNotEmpty) {
+                    signIn();
+                  } else {
+                    //when textfields are empty
+                    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                        //behavior: SnackBarBehavior.floating,
+                        //margin: EdgeInsets.only(bottom: 10.0),
+                        backgroundColor: Colors.red,
+                        content: Text(
+                          "Please fill all the area!",
+                          textAlign: TextAlign.center,
+                        )));
+                  }
                 },
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(80.0)),

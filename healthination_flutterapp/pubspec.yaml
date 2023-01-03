@@ -36,6 +36,7 @@ dependencies:
   string_2_icon: ^0.0.2  
   intl_phone_field: ^3.1.0 
   dropdown_button2: ^1.9.2
+  getwidget: ^2.0.4
 
 
   # The following adds the Cupertino Icons font to your application.

@@ -1,6 +1,7 @@
 Login Page:
-![Screenshot_1672768044](https://user-images.githubusercontent.com/67706542/210412670-5e3be69d-ba64-4e63-8110-67fd3e58428d.png)
-Home Page:
-![Screenshot_1672768110](https://user-images.githubusercontent.com/67706542/210412806-cf72d897-c4c4-4f2a-91e2-c4aec163ce8a.png)
+![image](https://user-images.githubusercontent.com/67706542/210413458-2a9bbaf2-bc3c-427f-b593-7daabfb1a7a4.png)
+Side Menu:
+![image](https://user-images.githubusercontent.com/67706542/210413547-56d25f60-7298-49d2-8093-c4eca384daf0.png)
 A Sample Page:
-![Screenshot_1672768133](https://user-images.githubusercontent.com/67706542/210412866-21dedc39-b39f-43cd-bfbf-fc63ddc19e34.png)
+![image](https://user-images.githubusercontent.com/67706542/210413678-83d67383-1174-4b00-90ab-71ee4e0c9890.png)
+

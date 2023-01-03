@@ -1,16 +1,6 @@
-# healthination_flutterapp
-
-A new Flutter project.
-
-## Getting Started
-
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+Login Page:
+![Screenshot_1672768044](https://user-images.githubusercontent.com/67706542/210412670-5e3be69d-ba64-4e63-8110-67fd3e58428d.png)
+Home Page:
+![Screenshot_1672768110](https://user-images.githubusercontent.com/67706542/210412806-cf72d897-c4c4-4f2a-91e2-c4aec163ce8a.png)
+A Sample Page:
+![Screenshot_1672768133](https://user-images.githubusercontent.com/67706542/210412866-21dedc39-b39f-43cd-bfbf-fc63ddc19e34.png)

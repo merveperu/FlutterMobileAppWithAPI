@@ -11,6 +11,7 @@ void main() {
   runApp(const MyApp());
 }
 
+//Hello
 //id of the current user
 String myPhoto = "";
 String myUserName = "";

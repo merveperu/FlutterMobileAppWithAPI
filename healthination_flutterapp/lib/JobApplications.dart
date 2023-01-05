@@ -114,7 +114,7 @@ class _JopApplicationsState extends State<JopApplications> {
         primarySwatch: Colors.blue,
         appBarTheme: AppBarTheme(
           iconTheme: IconThemeData(color: Colors.black),
-          color: Color.fromARGB(137, 26, 51, 150), //<-- SEE HERE
+          color: Color.fromARGB(137, 26, 51, 150),  
         ),
       ),
       home: Scaffold(

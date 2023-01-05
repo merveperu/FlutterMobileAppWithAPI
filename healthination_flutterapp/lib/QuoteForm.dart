@@ -8,6 +8,7 @@ import 'sidemenu.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl_phone_field/intl_phone_field.dart';
 import 'AddButton.dart';
+import 'QuoteInfo.dart';
 
 class Second extends StatefulWidget {
   const Second({Key? key}) : super(key: key);
@@ -15,6 +16,10 @@ class Second extends StatefulWidget {
   @override
   State<Second> createState() => _SecondState();
 }
+String treatments="";
+DateTime? dateTime;
+List users = [];
+var my_user;
 
 //Global Text Style
 class MyTextStyle {
@@ -38,6 +43,22 @@ class MyTextStyle2 {
 class MyTextStyle3 {
   static const TextStyle textStyle =
       TextStyle(color: Color.fromARGB(255, 35, 134, 166), fontSize: 15);
+}
+
+//delete form users with api
+Future deleteUser(int id) async {
+  final response = await http.delete(
+    Uri.parse("https://backend.gohealthination.com/additions/freequote/$id/"),
+  );
+  //204 olunca da sildi ben de bunu ekledim
+  if (response.statusCode == 200 || response.statusCode == 204) {
+    print("Connection for delete form users succesful!");
+    //var items = json.decode(utf8.decode(response.bodyBytes))["id"];
+    //print(response.body);
+  } else {
+    print('Connection for delete form users not succesful! Response code:');
+    print(response.statusCode);
+  }
 }
 
 class _SecondState extends State<Second> {
@@ -67,22 +88,6 @@ class _SecondState extends State<Second> {
       });
     }
     ;
-  }
-
-  //delete form users with api
-  Future deleteUser(int id) async {
-    final response = await http.delete(
-      Uri.parse("https://backend.gohealthination.com/additions/freequote/$id/"),
-    );
-    //204 olunca da sildi ben de bunu ekledim
-    if (response.statusCode == 200 || response.statusCode == 204) {
-      print("Connection for delete form users succesful!");
-      //var items = json.decode(utf8.decode(response.bodyBytes))["id"];
-      //print(response.body);
-    } else {
-      print('Connection for delete form users not succesful! Response code:');
-      print(response.statusCode);
-    }
   }
 
   String warningMessage = "";
@@ -144,7 +149,7 @@ class _SecondState extends State<Second> {
         primarySwatch: Colors.blue,
         appBarTheme: AppBarTheme(
           iconTheme: IconThemeData(color: Colors.black),
-          color: Color.fromARGB(137, 26, 51, 150),  
+          color: Color.fromARGB(137, 26, 51, 150),
         ),
       ),
       home: Scaffold(
@@ -220,9 +225,9 @@ class _SecondState extends State<Second> {
                       //date variables
                       var index2 = index + 1;
                       String time = users[index]["created_at"];
-                      DateTime dateTime = DateTime.parse(time);
+                      dateTime = DateTime.parse(time);
                       //treatment variables
-                      String treatments = users[index]["treatment"].toString();
+                      treatments = users[index]["treatment"].toString();
                       if (treatments == "1") {
                         treatments = "Eye Care";
                       } else if (treatments == "2") {
@@ -235,11 +240,11 @@ class _SecondState extends State<Second> {
                         treatments = "Diabetes";
                         //Dunno what this is?
                       } else if (treatments == "6") {
-                        treatments = " ";
+                        treatments = "Hairtransplant ";
                       } else if (treatments == "7") {
                         treatments = "GeneralFAQ";
                       } else {
-                        treatments = "Hairtransplant";
+                        treatments = "";
                       }
                       //onlie meeting variables
                       String? meeting =
@@ -355,7 +360,7 @@ class _SecondState extends State<Second> {
                                                       ),
                                                       Text(
                                                         DateFormat.Hm()
-                                                            .format(dateTime),
+                                                            .format(dateTime!),
                                                         style: TextStyle(
                                                           color: Color.fromARGB(
                                                               255,
@@ -369,7 +374,7 @@ class _SecondState extends State<Second> {
                                                       ),
                                                       Text(
                                                         DateFormat.yMd()
-                                                            .format(dateTime),
+                                                            .format(dateTime!),
                                                         style: TextStyle(
                                                             color:
                                                                 Color.fromARGB(
@@ -506,30 +511,59 @@ class _SecondState extends State<Second> {
                                             ),
                                           ),
                                         ),
-                                        //delete button
-                                        IconButton(
-                                          icon: Icon(Icons.delete),
-                                          iconSize: 24.0,
-                                          color:
-                                              Color.fromARGB(199, 26, 71, 150),
-                                          onPressed: () {
-                                            //prints the user id
-                                            print(
-                                                "silincek kişinin listviewdeki id'si:");
-                                            print(users[index]["id"]);
+                                        //delete and info buttons
+                                        Column(
+                                          children: [
+                                            IconButton(
+                                              icon: Icon(Icons.delete),
+                                              iconSize: 24.0,
+                                              color: Color.fromARGB(
+                                                  199, 26, 71, 150),
+                                              onPressed: () {
+                                                //prints the user id
+                                                print(
+                                                    "silincek kişinin listviewdeki id'si:");
+                                                print(users[index]["id"]);
 
-                                            setState(() {
-                                              deleteUser(users[index]["id"]);
-                                              //fetchUser();
-                                              //When a form user deleted, page refreshes
-                                              Navigator.push(
-                                                  context,
-                                                  MaterialPageRoute(
-                                                    builder: (context) =>
-                                                        const Second(),
-                                                  ));
-                                            });
-                                          },
+                                                setState(() {
+                                                  deleteUser(
+                                                      users[index]["id"]);
+                                                  //fetchUser();
+                                                  //When a form user deleted, page refreshes
+                                                  Navigator.push(
+                                                      context,
+                                                      MaterialPageRoute(
+                                                        builder: (context) =>
+                                                            const Second(),
+                                                      ));
+                                                });
+                                              },
+                                            ),
+                                            IconButton(
+                                              icon: Icon(Icons.info),
+                                              iconSize: 24.0,
+                                              color: Color.fromARGB(
+                                                  199, 26, 71, 150),
+                                              onPressed: () {
+                                                //prints the user id
+                                                print(
+                                                    "info kişinin listviewdeki id'si (global yap!Sonraki sayfaya taşı):");
+                                                print(users[index]);
+
+                                                setState(() {
+                                                  my_user = users[index];
+                                                  
+                                                  //When a form user deleted, page refreshes
+                                                  Navigator.push(
+                                                      context,
+                                                      MaterialPageRoute(
+                                                        builder: (context) =>
+                                                            QuoteInfo(),
+                                                      ));
+                                                });
+                                              },
+                                            ),
+                                          ],
                                         ),
                                       ],
                                     ),

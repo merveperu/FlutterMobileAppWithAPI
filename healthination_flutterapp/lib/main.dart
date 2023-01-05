@@ -12,11 +12,11 @@ void main() {
 }
 
 //id of the current user
-String myPhoto="";
-String myUserName="";
-int myId=0;
-String myFirstName="";
-String myLastName="";
+String myPhoto = "";
+String myUserName = "";
+int myId = 0;
+String myFirstName = "";
+String myLastName = "";
 
 class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
@@ -84,23 +84,21 @@ class _MyCustomFormState extends State<MyCustomForm> {
       if (response.statusCode == 200) {
         Map<String, dynamic> output = json.decode(response.body);
         final body = jsonDecode(utf8.decode(response.bodyBytes));
-         
+
         print(response.body);
         print("Token: " + body["key"].toString());
         print("Connection for login succesful");
         print(body["user"]["username"]);
         print(body["user"]["id"]);
         print(body["user"]["first_name"]);
-         print(body["user"]["last_name"]);
-        
-        
+        print(body["user"]["last_name"]);
 
         setState(() {
-          myUserName=body["user"]["username"];
-          myPhoto=body["user"]["userPhoto"].toString();
-          myId=body["user"]["id"];
-          myFirstName=body["user"]["first_name"];
-          myLastName=body["user"]["last_name"];
+          myUserName = body["user"]["username"];
+          myPhoto = body["user"]["userPhoto"].toString();
+          myId = body["user"]["id"];
+          myFirstName = body["user"]["first_name"];
+          myLastName = body["user"]["last_name"];
           Navigator.push(
               context,
               MaterialPageRoute(

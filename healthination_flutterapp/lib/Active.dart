@@ -21,36 +21,26 @@ class _ActiveState extends State<Active> {
   }
 
   List chats = [];
-  //display chat with api
+  
+  //display form users with api
   Future fetchChat() async {
-    try {
-      
-      var response = await http
-          .get(Uri.parse("https://backend.gohealthination.com/chat/messages/"));
-          
+    var response = await http.get(Uri.parse(
+        "https://backend.gohealthination.com/chat/messages/"));
+    if (response.statusCode == 200) {
+      print("Connection for displaying active chat succesful.");
+      var items = json.decode(utf8.decode(response.bodyBytes))["results"];
       print(response.statusCode);
-      if(response.body.isNotEmpty){
-        print(json.decode(response.body));
-      }
-
-      // if (response.statusCode == 200) {
-      //   print("Connection for displaying job application users succesful.");
-      //   var items = await response.bodyBytes;
-      //   print(items);
-
-      //   setState(() {
-      //     chats = items;
-      //   });
-      // } else {
-      //   print(
-      //       "Connection for displaying job application users is not succesful. Status Code:");
-      //   print(response.statusCode);
-      //   setState(() {
-      //     chats = [];
-      //   });
-      // }
-    } catch (e) {
-      print(e);
+      print(items);
+      setState(() {
+        chats = items;
+      });
+      
+    } else {
+      print("Connection for displaying active chat is not succesful.");
+      print(response.statusCode);
+      setState(() {
+        chats = [];
+      });
     }
     ;
   }

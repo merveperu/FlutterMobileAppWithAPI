@@ -89,10 +89,10 @@ class _MyCustomFormState extends State<MyCustomForm> {
         print(response.body);
         print("Token: " + body["key"].toString());
         print("Connection for login succesful");
-        print(body["user"]["username"]);
-        print(body["user"]["id"]);
-        print(body["user"]["first_name"]);
-        print(body["user"]["last_name"]);
+        print("username: "+body["user"]["username"]);
+        print("Id: "+body["user"]["id"].toString());
+        print("first name: "+body["user"]["first_name"]);
+        print("last name: "+body["user"]["last_name"]);
 
         setState(() {
           myUserName = body["user"]["username"];

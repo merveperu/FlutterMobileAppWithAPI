@@ -30,7 +30,7 @@ class QuoteInfo extends StatefulWidget {
 }
 
 var my_source;
-bool is_visible=false;
+bool is_visible = false;
 var time;
 var my_dateTime;
 
@@ -38,21 +38,19 @@ String my_treatment = "";
 String my_subtreatment = "";
 
 class _QuoteInfoState extends State<QuoteInfo> {
-  void checkSource(){
-    if(my_user["source"]==null){
-      my_source="Other";
-    }
-    else{
-      my_source=my_user["source"];
+  void checkSource() {
+    if (my_user["source"] == null) {
+      my_source = "Other";
+    } else {
+      my_source = my_user["source"];
     }
   }
 
   void checkVisible() {
-    if(my_user["isOnlineMeeting"]!=null){
-      is_visible=true;
-    }
-    else{
-      is_visible=false;
+    if (my_user["isOnlineMeeting"] != null) {
+      is_visible = true;
+    } else {
+      is_visible = false;
     }
   }
 
@@ -64,7 +62,7 @@ class _QuoteInfoState extends State<QuoteInfo> {
   }
 
   void checkTreatment() {
-    print(my_user["treatment"]);
+    //print(my_user["treatment"]);
 
     if (my_user["treatment"] == 1) {
       my_treatment = "Eye Care";
@@ -87,7 +85,7 @@ class _QuoteInfoState extends State<QuoteInfo> {
   }
 
   void checkSubTreatment() {
-    print(my_user["subTreatment"]);
+    //print(my_user["subTreatment"]);
 
     if (my_user["subTreatment"] == 1) {
       my_subtreatment = "LASIK Eye Surgery";
@@ -273,7 +271,8 @@ class _QuoteInfoState extends State<QuoteInfo> {
                                       children: [
                                         Icon(
                                           Icons.fiber_manual_record,
-                                          color: Color.fromARGB(255, 55, 160, 87),
+                                          color:
+                                              Color.fromARGB(255, 55, 160, 87),
                                           size: 25.0,
                                         ),
                                         Padding(

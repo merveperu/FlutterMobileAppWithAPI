@@ -9,41 +9,47 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:intl_phone_field/intl_phone_field.dart';
 
 class Third extends StatefulWidget {
-
   const Third({super.key});
 
   @override
   State<Third> createState() => _ThirdState();
 }
 
-List users = [];
+List orders = [];
+
 class _ThirdState extends State<Third> {
+  //display orders with api
+  Future fetchOrders() async {
+    var response =
+        await http.get(Uri.parse("http://backend.gohealthination.com/orders/"));
 
+    if (response.statusCode == 200) {
+      print("Connection for displaying orders succesful.");
+      print(response.statusCode);
+      var items = json.decode(utf8.decode(response.bodyBytes))["results"];
 
+      print(items);
+      setState(() {
+        orders = items;
+      });
+    } else {
+      print("Connection for displaying orders is not succesful.");
+      print(response.statusCode);
+      setState(() {
+        orders = [];
+      });
+    }
+    ;
+  }
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    this.fetchUser();
+    this.fetchOrders();
+  
   }
-  //display all users with api
-  Future fetchUser() async {
-    var response = await http.get(
-        Uri.parse("https://backend.gohealthination.com/users/user_list/?is_staff=True"));
-    if (response.statusCode == 200  || response.statusCode == 201 || response.statusCode == 204) {
-      print("Connection for displaying all users succesful.");
-      final map= json.decode(utf8.decode(response.bodyBytes)); 
-      print(map);   
-    } else {
-      print("Connection for displaying all users is not succesful.");
-      print(response.statusCode);
-      setState(() {
-        users = [];
-      });
-    }
-    ;
-  }
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -61,12 +67,12 @@ class _ThirdState extends State<Third> {
       home: Scaffold(
         drawer: NavDrawer(),
         appBar: AppBar(
-            iconTheme: IconThemeData(color: Color.fromARGB(160, 255, 255, 255)),
-            title: Padding(
-              padding: const EdgeInsets.only(left:30.0),
-              child: SizedBox(width: 150, child: Image.asset("assets/logo.png")),
-            ),
+          iconTheme: IconThemeData(color: Color.fromARGB(160, 255, 255, 255)),
+          title: Padding(
+            padding: const EdgeInsets.only(left: 30.0),
+            child: SizedBox(width: 150, child: Image.asset("assets/logo.png")),
           ),
+        ),
         body: Container(
           decoration: BoxDecoration(
               gradient: new LinearGradient(
@@ -77,6 +83,128 @@ class _ThirdState extends State<Third> {
               Color.fromARGB(139, 35, 171, 96)
             ],
           )),
+          child: Stack(
+            children: [
+              ListView.builder(
+                  itemCount: orders.length,
+                  itemBuilder: (context, index) {
+                    //variables
+                    String id = orders[index]["order"].toString();
+                    print(id);
+                    return Padding(
+                      padding:
+                          const EdgeInsets.only(top: 10.0, left: 10, right: 10),
+                      child: Row(
+                        children: [
+                          Expanded(
+                              child: SizedBox(
+                            width: 20,
+                            height: 130,
+                            child: DecoratedBox(
+                              decoration: BoxDecoration(
+                                gradient: LinearGradient(
+                                  colors: [
+                                    Color.fromARGB(255, 203, 197, 197),
+                                    Color.fromARGB(134, 255, 255, 255)
+                                  ],
+                                  begin: Alignment.bottomLeft,
+                                  end: Alignment.bottomLeft,
+                                ),
+                                borderRadius: BorderRadius.circular(5),
+                              ),
+                              child: Padding(
+                                padding: const EdgeInsets.only(left: 0.0),
+                                child: Row(
+                                  children: [
+                                    Container(
+                                      width: 80,
+                                      decoration: BoxDecoration(
+                                          borderRadius: BorderRadius.only(
+                                              topLeft: Radius.circular(5),
+                                              bottomLeft: Radius.circular(5)),
+                                          color:
+                                              Color.fromARGB(255, 26, 72, 150)),
+                                      child: Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.center,
+                                        children: [
+                                          Column(
+                                            children: [
+                                              Text(
+                                                "aa",
+                                                style: TextStyle(
+                                                  color: Colors.white,
+                                                  fontWeight: FontWeight.w600,
+                                                  fontSize: 12,
+                                                ),
+                                              ),
+                                              SizedBox(
+                                                height: 20,
+                                              ),
+                                              Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.center,
+                                                children: [
+                                                  Text(
+                                                    "aa",
+                                                    style: TextStyle(
+                                                      color: Color.fromARGB(
+                                                          184, 255, 255, 255),
+                                                      fontWeight:
+                                                          FontWeight.w600,
+                                                      fontSize: 12,
+                                                    ),
+                                                  ),
+                                                  Text(
+                                                    "aa",
+                                                    style: TextStyle(
+                                                      color: Color.fromARGB(
+                                                          184, 255, 255, 255),
+                                                      fontWeight:
+                                                          FontWeight.w600,
+                                                      fontSize: 12,
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                              SizedBox(
+                                                height: 20,
+                                              ),
+                                              Text(
+                                                "aa",
+                                                style: TextStyle(
+                                                  color: Color.fromARGB(
+                                                      255, 255, 255, 255),
+                                                  fontSize: 11,
+                                                ),
+                                                textAlign: TextAlign.center,
+                                              ),
+                                              Text(
+                                                "aa",
+                                                style: TextStyle(
+                                                    color: Color.fromARGB(
+                                                        184, 255, 255, 255),
+                                                    fontSize: 12),
+                                                textAlign: TextAlign.center,
+                                              ),
+                                            ],
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ))
+                        ],
+                      ),
+                    );
+                  })
+            ],
+          ),
         ),
       ),
     );

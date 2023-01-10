@@ -50,7 +50,7 @@ class _ChatPageState extends State<ChatPage> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: "Patient Process",
+      title: "Chat",
       theme: ThemeData(
         textTheme: GoogleFonts.latoTextTheme(
           Theme.of(context).textTheme,
@@ -138,31 +138,40 @@ class _ChatPageState extends State<ChatPage> {
                 child: ListView.builder(
                     itemCount: users.length,
                     itemBuilder: (context, index) {
+                      var my_visibility=true;
+                      
                       fullname = users[index]["full_name"];
-                      return Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        //centers the screen
-                        child: Center(
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              SizedBox(
-                                width: 300,
-                                height: 60,
-                                child: GFButton(
-                                  onPressed: () {
-                                    setState(() {});
-                                  },
-                                  text: fullname,
-                                  textColor: Color.fromARGB(255, 75, 32, 177),
-                                  shape: GFButtonShape.pills,
-                                  color: Color.fromARGB(255, 84, 102, 168),
-                                  fullWidthButton: true,
-                                  type: GFButtonType.outline2x,
+                      if(fullname==myFullName){
+                        my_visibility=false;
+                      }
+                      //The current user's name will not show on the screen with Visibility Widget! Done
+                      return Visibility(
+                        visible: my_visibility,
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          //centers the screen
+                          child: Center(
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                SizedBox(
+                                  width: 300,
+                                  height: 60,
+                                  child: GFButton(
+                                    onPressed: () {
+                                      setState(() {});
+                                    },
+                                    text: fullname,
+                                    textColor: Color.fromARGB(255, 75, 32, 177),
+                                    shape: GFButtonShape.pills,
+                                    color: Color.fromARGB(255, 84, 102, 168),
+                                    fullWidthButton: true,
+                                    type: GFButtonType.outline2x,
+                                  ),
                                 ),
-                              ),
-                            ],
+                              ],
+                            ),
                           ),
                         ),
                       );

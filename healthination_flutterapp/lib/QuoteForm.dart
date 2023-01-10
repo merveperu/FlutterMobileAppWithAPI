@@ -545,9 +545,7 @@ class _SecondState extends State<Second> {
                                               color: Color.fromARGB(
                                                   199, 26, 71, 150),
                                               onPressed: () {
-                                                //prints the user id
-                                                print(
-                                                    "info kişinin listviewdeki id'si (global yap!Sonraki sayfaya taşı):");
+                                                //prints the user id 
                                                 print(users[index]);
 
                                                 setState(() {

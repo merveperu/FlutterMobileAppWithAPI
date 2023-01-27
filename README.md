@@ -1,3 +1,5 @@
+In this app, only staff can log in. If email or password is wrong, it gives a warning message. If everything correct, they can log in. Inside this app, staff can see informations of the people who used Quote Form (name,date,phone number,treatment etc.). Staff can delete or add new Quote Forms. Staff can also see list of Job Applications. They can accept or reject. In chat part they can see all staff names and can send a message.
+
 
 ![image](https://user-images.githubusercontent.com/67706542/210413833-4dc859d4-e0fd-45fa-a0d6-2c0cc0048bc3.png)
 ![image](https://user-images.githubusercontent.com/67706542/210862585-352cf1cb-c0de-4274-b86d-3e1c845e5a9e.png)

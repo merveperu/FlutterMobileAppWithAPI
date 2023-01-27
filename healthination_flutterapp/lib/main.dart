@@ -18,6 +18,7 @@ String myUserName = "";
 int myId = 0;
 String myFirstName = "";
 String myLastName = "";
+var myToken;
 
 class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
@@ -87,7 +88,7 @@ class _MyCustomFormState extends State<MyCustomForm> {
         final body = jsonDecode(utf8.decode(response.bodyBytes));
 
         print(response.body);
-        print("Token: " + body["key"].toString());
+        print("Token: " + body["user"]["token"]);
         print("Connection for login succesful");
         print("username: "+body["user"]["username"]);
         print("Id: "+body["user"]["id"].toString());
@@ -95,6 +96,7 @@ class _MyCustomFormState extends State<MyCustomForm> {
         print("last name: "+body["user"]["last_name"]);
 
         setState(() {
+          myToken=body["user"]["token"];
           myUserName = body["user"]["username"];
           myPhoto = body["user"]["userPhoto"].toString();
           myId = body["user"]["id"];

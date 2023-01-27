@@ -1,12 +1,11 @@
 import 'dart:convert';
-
-import 'package:flutter_social_button/flutter_social_button.dart';
+import 'dart:io';
+import 'dart:async';
+import 'package:healthination_flutterapp/main.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'sidemenu.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:intl_phone_field/intl_phone_field.dart';
 
 class Third extends StatefulWidget {
   const Third({super.key});
@@ -20,8 +19,11 @@ List orders = [];
 class _ThirdState extends State<Third> {
   //display orders with api
   Future fetchOrders() async {
-    var response =
-        await http.get(Uri.parse("http://backend.gohealthination.com/orders/"));
+    var response = await http.get(
+        Uri.parse("https://backend.gohealthination.com/orders/"),
+        headers: { 
+           'Authorization': 'Bearer $myToken',});
+           print('Token : ${myToken}');
 
     if (response.statusCode == 200) {
       print("Connection for displaying orders succesful.");
@@ -47,7 +49,6 @@ class _ThirdState extends State<Third> {
     // TODO: implement initState
     super.initState();
     this.fetchOrders();
-  
   }
 
   @override
